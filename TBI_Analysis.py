@@ -4,12 +4,12 @@ import matplotlib.pyplot as plt
 import dipy.reconst.dki as dki
 import dipy.reconst.dti as dti
 from dipy.segment.mask import median_otsu
-from dipy.core.gradients import gradient_table
+from dipy.core.gradients import gradient_table, generate_bvecs
 from dipy.io import read_bvals_bvecs
 
-fdwi = "/home/shreyasfadnavis/Desktop/aTBIp2_008_06m_DKI/aTBIp2_008_06m_3shell.nii.gz"
-fbval = "/home/shreyasfadnavis/Desktop/aTBIp2_008_06m_DKI/aTBIp2_008_06m_3shell.bval"
-fbvec = "/home/shreyasfadnavis/Desktop/aTBIp2_008_06m_DKI/aTBIp2_008_06m_3shell.bvec"
+fdwi = "/home/shreyasfadnavis/Desktop/aTBIp2_006_00m_DKI/aTBIp2_006_00m_3shell.nii.gz"
+fbval = "/home/shreyasfadnavis/Desktop/aTBIp2_006_00m_DKI/aTBIp2_006_00m_3shell.bval"
+fbvec = "/home/shreyasfadnavis/Desktop/aTBIp2_006_00m_DKI/aTBIp2_006_00m_3shell.bvec"
 
 img = nib.load(fdwi)
 data = img.get_data()
@@ -18,9 +18,10 @@ affine = img.affine
 maskdata, mask = median_otsu(data, 4, 2, False, vol_idx=[0, 1], dilate=1)
 
 bvals, bvecs = read_bvals_bvecs(fbval, fbvec)
-bvecs = bvecs / np.linalg.norm(bvecs)
+# bvecs = bvecs / np.linalg.norm(bvecs)
+bvecs = generate_bvecs(99)
 
-gtab = gradient_table(bvals, bvecs, atol=1)
+gtab = gradient_table(bvals, bvecs, atol=1e-2)
 dkimodel = dki.DiffusionKurtosisModel(gtab)
 
 dkifit = dkimodel.fit(data, mask=mask)
