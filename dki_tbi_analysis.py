@@ -18,7 +18,16 @@ maskdata, mask = median_otsu(data, 4, 2, False, vol_idx=[0, 1], dilate=1)
 
 bvals, bvecs = read_bvals_bvecs(fbval, fbvec)
 
+include = np.ones(99)
+include[33] = 0;
+include[66] = 0;
+bvals = bvals[include>0.1]
+bvecs = bvecs[include>0.1]
+data = data[:, :, :, include>0.1]
+
 gtab = gradient_table(bvals, bvecs)
+
+dkimodel = dki.DiffusionKurtosisModel(gtab)
 dkimodel = dki.DiffusionKurtosisModel(gtab)
 
 dkifit = dkimodel.fit(maskdata, mask=mask)
