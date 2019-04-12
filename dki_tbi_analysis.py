@@ -28,9 +28,8 @@ data = data[:, :, :, include>0.1]
 gtab = gradient_table(bvals, bvecs)
 
 dkimodel = dki.DiffusionKurtosisModel(gtab)
-dkimodel = dki.DiffusionKurtosisModel(gtab)
 
-dkifit = dkimodel.fit(maskdata, mask=mask)
+dkifit = dkimodel.fit(data, mask=mask)
 
 FA = dkifit.fa
 MD = dkifit.md
@@ -38,7 +37,7 @@ AD = dkifit.ad
 RD = dkifit.rd
 
 tenmodel = dti.TensorModel(gtab)
-tenfit = tenmodel.fit(maskdata, mask=mask)
+tenfit = tenmodel.fit(data, mask=mask)
 
 dti_FA = tenfit.fa
 dti_MD = tenfit.md
