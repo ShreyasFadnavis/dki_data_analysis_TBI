@@ -5,6 +5,7 @@ import dipy.reconst.dti as dti
 from dipy.segment.mask import median_otsu
 from dipy.core.gradients import gradient_table
 from dipy.io import read_bvals_bvecs
+from dipy.denoise.gibbs import gibbs_removal
 
 fdwi = "C:/Users/shrey/Desktop/data_tbi/data.nii.gz"
 fbval = "C:/Users/shrey/Desktop/data_tbi/tbi.bval"
@@ -12,6 +13,7 @@ fbvec = "C:/Users/shrey/Desktop/data_tbi/tbi.bvec"
 
 img = nib.load(fdwi)
 data = img.get_data()
+data = gibbs_removal(data)
 affine = img.affine
 
 maskdata, mask = median_otsu(data, 4, 2, False, vol_idx=[0, 1], dilate=1)
